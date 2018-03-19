@@ -8,8 +8,8 @@ namespace FileSystemExtensionLibrary
 {
     public enum Action
     {
-        ContinueSearch = 1,
-        SkipElement = 2,
-        StopSearch = 3
+        ContinueSearch = 0,
+        SkipElement = 1,
+        StopSearch = 2
     }
 }

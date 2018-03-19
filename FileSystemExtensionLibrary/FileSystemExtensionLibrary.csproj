@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Action.cs" />
     <Compile Include="EventArgs\FinishEventArgs .cs" />
+    <Compile Include="EventArgs\ItemFilteredEventArgs.cs" />
     <Compile Include="EventArgs\ItemFindedEventArgs.cs" />
     <Compile Include="EventArgs\StartEventArgs.cs" />
     <Compile Include="FileSystemVisitor.cs" />
