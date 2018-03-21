@@ -10,18 +10,14 @@ namespace FileSystemExtensionLibrary
     public sealed class FileSystemVisitor
     {
         #region  Fields
-        private readonly DirectoryInfo startDirectory;
         private readonly Func<FileSystemInfo, bool> filter;
         #endregion
 
         #region  Constructors
-        public FileSystemVisitor(string path, 
-            Func<FileSystemInfo, bool> filter = null): this(new DirectoryInfo(path), filter) { }
+        public FileSystemVisitor() { }
 
-        public FileSystemVisitor(DirectoryInfo startDirectory,
-            Func<FileSystemInfo, bool> filter = null)
+        public FileSystemVisitor(Func<FileSystemInfo, bool> filter = null)
         {
-            this.startDirectory = startDirectory;
             this.filter = filter;
         }
         #endregion
@@ -35,10 +31,26 @@ namespace FileSystemExtensionLibrary
         public event EventHandler<ItemFilteredEventArgs<DirectoryInfo>> FilteredDirectoryFinded;
         #endregion
 
-        public IEnumerable<FileSystemInfo> GetFileSystemInfoSequence()
+        public IEnumerable<FileSystemInfo> GetFileSystemInfoSequence(string path)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            DirectoryInfo startDirectory = new DirectoryInfo(path);
+            return GetFileSystemInfoSequence(startDirectory);
+        }
+
+        public IEnumerable<FileSystemInfo> GetFileSystemInfoSequence(DirectoryInfo directory)
+        {
+            if (directory == null)
+            {
+                throw new ArgumentNullException("directory");
+            }
+
             OnEvent(Start, new StartEventArgs());
-            foreach (var fileSystemInfo in GetAllSubFileSystemInfo(startDirectory))
+            foreach (var fileSystemInfo in GetAllSubFileSystemInfo(directory))
             {
                 yield return fileSystemInfo;
             }
@@ -48,11 +60,6 @@ namespace FileSystemExtensionLibrary
         #region  Private region
         private IEnumerable<FileSystemInfo> GetAllSubFileSystemInfo(DirectoryInfo directory)
         {
-            if(directory == null)
-            {
-                throw new ArgumentNullException("directory");
-            }
-
             IEnumerable<FileSystemInfo> directories;
 
             try

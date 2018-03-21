@@ -1,6 +1,7 @@
 ﻿using FileSystemExtensionLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace ConsoleApplicationTask1
     {
         static void Main(string[] args)
         {
-            string startPoint = "D:\\";
+            string path = "D:\\";
 
             Console.WriteLine("1: WITHOUT FILTER");
             Console.WriteLine("............................");
-            var visitor = new FileSystemVisitor(startPoint);
+            var visitor = new FileSystemVisitor();
 
             visitor.Start += (s, e) =>
             {
@@ -59,12 +60,12 @@ namespace ConsoleApplicationTask1
 
             try
             {
-                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence())
+                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence(path))
                 {
                     Console.WriteLine(fileSysInfo);
                 }
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -76,7 +77,7 @@ namespace ConsoleApplicationTask1
             Console.WriteLine();
             Console.WriteLine("2: WITH FILTER");
             Console.WriteLine("............................");
-            visitor = new FileSystemVisitor(startPoint, (info) => info.FullName.Contains("New"));
+            visitor = new FileSystemVisitor(info => info.FullName.Contains("New"));
 
             visitor.Start += (s, e) =>
             {
@@ -103,7 +104,7 @@ namespace ConsoleApplicationTask1
                 }
             };
 
-         
+
             visitor.FilteredFileFinded += (s, e) =>
             {
                 Console.WriteLine("Founded filtered file: " + e.FilteredItem.Name);
@@ -116,7 +117,7 @@ namespace ConsoleApplicationTask1
 
             try
             {
-                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence())
+                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence(path))
                 {
                     Console.WriteLine(fileSysInfo);
                 }
@@ -133,7 +134,7 @@ namespace ConsoleApplicationTask1
             Console.WriteLine();
             Console.WriteLine("3: STOP SEARCH CHECK");
             Console.WriteLine("............................");
-            visitor = new FileSystemVisitor(startPoint);
+            visitor = new FileSystemVisitor();
 
             visitor.Start += (s, e) =>
             {
@@ -172,7 +173,7 @@ namespace ConsoleApplicationTask1
 
             try
             {
-                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence())
+                foreach (var fileSysInfo in visitor.GetFileSystemInfoSequence(path))
                 {
                     Console.WriteLine(fileSysInfo);
                 }
